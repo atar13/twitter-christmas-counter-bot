@@ -81,7 +81,11 @@ function newTweet(){
                         tweetMessage = possibleMessages[1];
                     }else{
                         tweetMessage = possibleMessages[0];
-                    }        
+                    } 
+                    
+                    var tweet = {
+                        status : tweetMessage
+                    }
                     T.post('statuses/update', tweet, tweeted);
         
                 }else{
@@ -144,7 +148,7 @@ app.listen(PORT, () =>{
     console.log(`Twitter bot is running at http://localhost:${PORT}`);
     newTweet();
 
-    setInterval(newTweet, oneDayinMilliSeconds);
+    setInterval(newTweet, 3600000);
 
 
 });
