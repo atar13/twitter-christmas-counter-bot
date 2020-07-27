@@ -60,6 +60,7 @@ function newTweet(){
 
     T.get('users/show/screen_name', { screen_name: 'xmascounter25'}, (err, data, response) => {
         if(err){
+            console.log(new Date().toTimeString());
             console.log(err);
         }
         else{
@@ -116,11 +117,13 @@ function newTweet(){
             
                 function tweeted(err, data, response){
                     if(err){
-                        console.log(err);
+                            console.log(new Date().toTimeString());
+                            console.log(err);
                     }else{
                     // console.log(data);
                     T.get('users/show/screen_name', {screen_name: 'xmascounter25'}, (err,data, response)=> {
                         if(err){
+                                console.log(new Date().toTimeString());
                             console.log(err);
                         }else{
                             var lastTweetMessage = data.status.text;
