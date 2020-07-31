@@ -127,7 +127,8 @@ function newTweet(){
                             console.log(err);
                         }else{
                             var lastTweetMessage = data.status.text;
-                            console.log('Last tweet: ' + lastTweetMessage);
+                            var tweetTimestamp = new Date().toTimeString();
+                            console.log('Last tweet: ' + lastTweetMessage +` at ${tweetTimestamp}`);
                         }
                     });
                     }
