@@ -123,7 +123,7 @@ function newTweet(){
                     // console.log(data);
                     T.get('users/show/screen_name', {screen_name: 'xmascounter25'}, (err,data, response)=> {
                         if(err){
-                                console.log(new Date().toTimeString());
+                            console.log(new Date().toTimeString());
                             console.log(err);
                         }else{
                             var lastTweetMessage = data.status.text;
@@ -148,8 +148,9 @@ function newTweet(){
 
 
 app.listen(PORT, () =>{
-    console.log(`Twitter bot is running at http://localhost:${PORT}`);
-    newTweet();
+    var botRunningDate = new Date().toTimeString();
+    console.log(`Twitter bot is running at http://localhost:${PORT} at ${botRunningDate}`);
+    newTweet(); 
 
     setInterval(newTweet, 3600000);
 
