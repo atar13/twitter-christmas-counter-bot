@@ -30,114 +30,121 @@ function currentChristmasYear(){
 
 function newTweet(){
 
-    var daysLeft;
-
-
-    var christmasDay = new Date(currentChristmasYear(), 11, 25);
 
     var currentDate = new Date();
 
-    var remainingTime = christmasDay.getTime() - currentDate.getTime();
+    if(currentDate.getHours()==0&&currentDate.getMinutes()==1){
+
+        var daysLeft;
 
 
-    var remainingDays = (remainingTime/oneDayinMilliSeconds).toFixed(0);
+        var christmasDay = new Date(currentChristmasYear(), 11, 25);
 
 
-    function dayMonthYearEqual(dateOne, dateTwo){
-        return (dateOne.getDate() == dateTwo.getDate() && dateOne.getMonth() == dateTwo.getMonth() && dateOne.getFullYear() == dateTwo.getFullYear());
-    }
+        var remainingTime = christmasDay.getTime() - currentDate.getTime();
 
 
-    daysLeft = remainingDays;
-
-    var daysUntilEndofYear = parseInt(daysLeft) +6;
+        var remainingDays = (remainingTime/oneDayinMilliSeconds).toFixed(0);
 
 
-    var possibleMessages = [`${daysLeft} days left until Christmas!`,`${daysLeft} days until Christmas and ${daysUntilEndofYear} days until the end of ${currentChristmasYear()}! `];
-
-
-
-
-    T.get('users/show/screen_name', { screen_name: 'xmascounter25'}, (err, data, response) => {
-        if(err){
-            console.log(new Date().toTimeString());
-            console.log(err);
+        function dayMonthYearEqual(dateOne, dateTwo){
+            return (dateOne.getDate() == dateTwo.getDate() && dateOne.getMonth() == dateTwo.getMonth() && dateOne.getFullYear() == dateTwo.getFullYear());
         }
-        else{
-            // console.log(data.status.created_at);
-
-            var lastTweetDate = new Date(data.status.created_at);
-            // console.log(lastTweetDate.getFullYear());
-
-            if(dayMonthYearEqual(lastTweetDate, currentDate)){
-
-            }else{
-
-                var random = (Math.random()*10).toFixed(0);
 
 
-                var tweetMessage;
-                if(currentDate.getMonth()!=11||currentDate.getDate()<25||currentDate.getDate()>25){
-                    if(random == 5 ){
-                        tweetMessage = possibleMessages[1];
-                    }else{
-                        tweetMessage = possibleMessages[0];
-                    } 
-                    
-                    var tweet = {
-                        status : tweetMessage
-                    }
-                    T.post('statuses/update', tweet, tweeted);
-        
+        daysLeft = remainingDays;
+
+        var daysUntilEndofYear = parseInt(daysLeft) +6;
+
+
+        var possibleMessages = [`${daysLeft} days left until Christmas!`,`${daysLeft} days until Christmas and ${daysUntilEndofYear} days until the end of ${currentChristmasYear()}! `];
+
+
+
+
+        T.get('users/show/screen_name', { screen_name: 'xmascounter25'}, (err, data, response) => {
+            if(err){
+                console.log(new Date().toTimeString());
+                console.log(err);
+            }
+            else{
+                // console.log(data.status.created_at);
+
+                var lastTweetDate = new Date(data.status.created_at);
+                // console.log(lastTweetDate.getFullYear());
+
+                if(dayMonthYearEqual(lastTweetDate, currentDate)){
+
                 }else{
-                    tweetMessage = 'Today is Christmas! Merry Christmas!';
 
-                    var christmasImage = fs.readFileSync('./christmasImage.jpg', {encoding: 'base64'});
-                    T.post('media/upload', {media_data: christmasImage}, (err, data, response) => {
-                        var imageId = data.media_id_string;
-                        var altText = `Merry Christmas ${currentChristmasYear}!`;
-                        var meta_params = {media_id: imageId, alt_text: { text: altText}};
+                    var tweetMessage;
+
+                    if(currentDate.getMonth()!=11||currentDate.getDate()<25||currentDate.getDate()>25){
+
+                        var random = (Math.random()*10).toFixed(0);
+
+                        if(random == 5 ){
+                            tweetMessage = possibleMessages[1];
+                        }else{
+                            tweetMessage = possibleMessages[0];
+                        } 
                         
-                        T.post('media/metadata/create', meta_params, (err, data, response) => {
-                            if(!err) {
-                                var params = {status: tweetMessage, media_ids:[imageId]};
+                        var tweet = {
+                            status : tweetMessage
+                        }
+                        T.post('statuses/update', tweet, tweeted);
+            
+                    }else{
+                        tweetMessage = 'Today is Christmas! Merry Christmas!';
 
-                                T.post('statuses/update', params, (err, data, repsonse) =>{
-                                });
+                        var christmasImage = fs.readFileSync('./christmasImage.jpg', {encoding: 'base64'});
+                        T.post('media/upload', {media_data: christmasImage}, (err, data, response) => {
+                            var imageId = data.media_id_string;
+                            var altText = `Merry Christmas ${currentChristmasYear}!`;
+                            var meta_params = {media_id: imageId, alt_text: { text: altText}};
+                            
+                            T.post('media/metadata/create', meta_params, (err, data, response) => {
+                                if(!err) {
+                                    var params = {status: tweetMessage, media_ids:[imageId]};
+
+                                    T.post('statuses/update', params, (err, data, repsonse) =>{
+                                    });
+                                }
+                            });
+                        });
+                        
+                    }
+
+
+                    console.log('About to tweet: ' + tweetMessage);
+
+
+                
+                    function tweeted(err, data, response){
+                        if(err){
+                                console.log(new Date().toTimeString());
+                                console.log(err);
+                        }else{
+                        // console.log(data);
+                        T.get('users/show/screen_name', {screen_name: 'xmascounter25'}, (err,data, response)=> {
+                            if(err){
+                                console.log(new Date().toTimeString());
+                                console.log(err);
+                            }else{
+                                var lastTweetMessage = data.status.text;
+                                var tweetTimestamp = new Date().toTimeString();
+                                console.log('Last tweet: ' + lastTweetMessage +` at ${tweetTimestamp}`);
                             }
                         });
-                    });
-                    
-                }
-
-
-                console.log('About to tweet: ' + tweetMessage);
-
-
-            
-                function tweeted(err, data, response){
-                    if(err){
-                            console.log(new Date().toTimeString());
-                            console.log(err);
-                    }else{
-                    // console.log(data);
-                    T.get('users/show/screen_name', {screen_name: 'xmascounter25'}, (err,data, response)=> {
-                        if(err){
-                            console.log(new Date().toTimeString());
-                            console.log(err);
-                        }else{
-                            var lastTweetMessage = data.status.text;
-                            var tweetTimestamp = new Date().toTimeString();
-                            console.log('Last tweet: ' + lastTweetMessage +` at ${tweetTimestamp}`);
                         }
-                    });
-                    }
-                }            
+                    }            
+                }
             }
-        }
-    });
+        });
 
+    }else{
 
+    }
 
 
 }
@@ -151,8 +158,8 @@ function newTweet(){
 app.listen(PORT, () =>{
     var botRunningDate = new Date().toTimeString();
     console.log(`Twitter bot is running at http://localhost:${PORT} at ${botRunningDate}`);
-    newTweet(); 
 
+    newTweet(); 
     setInterval(newTweet, 3600000);
 
 
