@@ -33,7 +33,7 @@ function newTweet(){
 
     var currentDate = new Date();
 
-    if(currentDate.getHours()==0&&currentDate.getMinutes()==1){
+    // if(currentDate.getHours()==0&&currentDate.getMinutes()==1){
 
         var daysLeft;
 
@@ -142,9 +142,9 @@ function newTweet(){
             }
         });
 
-    }else{
+    // }else{
 
-    }
+    // }
 
 
 }
