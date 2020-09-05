@@ -4,6 +4,7 @@ const Twit = require('twit');
 const express = require('express');
 const app = express();
 const fs = require('fs-extra');
+const player = require('play-sound')(opts = {});
 
 const config = require('./config');
 
@@ -93,6 +94,18 @@ function newTweet(){
                             status : tweetMessage
                         }
                         T.post('statuses/update', tweet, tweeted);
+                        
+                        player.play('assets/audio/tweet.mp3', (err) => {
+                            if(err){
+                                throw err
+                            }
+                            player.play('assets/audio/jingle_bells.mp3',{timeout: 1000}, (err) => {
+                            
+                                if(err){
+                                    throw err
+                                }
+                            })
+                        })
             
                     }else{
                         tweetMessage = 'Today is Christmas! Merry Christmas!';
