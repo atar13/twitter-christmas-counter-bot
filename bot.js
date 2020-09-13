@@ -160,7 +160,7 @@ app.listen(PORT, () =>{
     console.log(`Twitter bot is running at http://localhost:${PORT} at ${botRunningDate}`);
 
     newTweet(); 
-    setInterval(newTweet, 3600000);
+    setInterval(newTweet, 60000);
 
 
 });
